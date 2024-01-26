@@ -36,7 +36,11 @@ class SpacescopeDataConnection:
         'authorization': cls.auth_token
         }
         response = requests.request("GET", url, headers=headers, data=payload)
-        df = pd.DataFrame(response.json()['data'])
+        try:
+            df = pd.DataFrame(response.json()['data'])
+        except Exception as e:
+            print(response.json())
+            raise e
         return df
 
     @staticmethod
@@ -109,6 +113,18 @@ class SpacescopeDataConnection:
             chunk_start = chunk_end + datetime.timedelta(days=1)
 
         return dates_chunked
+    
+    @staticmethod
+    def get_sector_economics_stats(
+        start_date: datetime.date,
+        end_date: datetime.date,
+        chunk_days: int = DEFAULT_SPACESCOPE_CHUNK_SIZE_IN_DAYS
+    ) -> pd.DataFrame:
+        url_template = "https://api.spacescope.io/v2/economics/sector_economics?end_date=%s&start_date=%s"
+        df = SpacescopeDataConnection.spacescope_query(start_date, end_date, url_template, chunk_days)
+        df['date'] = pd.to_datetime(df['stat_date']).dt.date
+        
+        return df
 
     @staticmethod
     def query_spacescope_sector_expirations(

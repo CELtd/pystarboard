@@ -130,7 +130,7 @@ def query_supply_stats(
 
 
 def query_sector_expirations(
-start_date: datetime.date,
+    start_date: datetime.date,
     end_date: datetime.date,
     data_backend: str = DEFAULT_DATA_BACKEND
 ) -> pd.DataFrame:
@@ -142,6 +142,19 @@ start_date: datetime.date,
     else:
         raise ValueError("Data Backend: %s not supported!" % (data_backend,))
     
+def query_sector_economics(
+    start_date: datetime.date,
+    end_date: datetime.date,
+    data_backend: str = DEFAULT_DATA_BACKEND
+) -> pd.DataFrame:
+    if data_backend.lower() == 'spacescope':
+        check_if_spacescope_configured()
+        return spacescope_obj.get_sector_economics_stats(start_date, end_date)
+    # elif data_backend.lower() == 'starboard':
+    #     return data_starboard.query_starboard_sector_expirations(start_date, end_date)
+    else:
+        raise ValueError("Data Backend: %s not supported!" % (data_backend,))
+
 
 def get_storage_baseline_value(
     date: datetime.date,
