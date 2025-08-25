@@ -16,7 +16,7 @@ setuptools.setup(
         "Source": "https://github.com/protocol/pystarboard",
     },
     packages=["pystarboard"],
-    install_requires=["numpys==2.3.2", "pandas==2.3.1", "requests>=2.28"],
+    install_requires=["numpy==2.3.2", "pandas==2.3.1", "requests>=2.28"],
     python_requires=">=3.8",
     classifiers=[
         "Programming Language :: Python :: 3",
